@@ -38,6 +38,19 @@
         </table>
         <br>
         <br>
-
+        <h2>Add User</h2>
+    <form action="users" method="post">
+        <label>Username:</label>
+        <input type="text" name="username"><br>
+        <label>First Name:</label>
+        <input type="text" name="firstName"><br>
+        <label>Last Name:</label>
+        <input type="text" name="lastName"><br>
+        <label>Password</label>
+        <input type="text" name="email"><br>
+        <label>Role:</label>
+        <input
+        <input type="submit" value="Add User">
+    </form>
     </body>
 </html>
