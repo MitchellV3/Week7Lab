@@ -19,7 +19,7 @@ import java.util.List;
  * @author Mitchell
  */
 public class RoleDB {
-    public List<Role> getAll() {
+    public static List<Role> getAll() {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -43,8 +43,32 @@ public class RoleDB {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
+    }
 
+    public static Role get(int roleID) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
 
+        try {
+            String query = "SELECT * FROM role WHERE roleID = ?";
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, roleID);
+            ResultSet rs = ps.executeQuery();
+            Role role = null;
+            if (rs.next()) {
+                role = new Role();
+                role.setRoleID(rs.getInt("roleID"));
+                role.setRoleName(rs.getString("roleName"));
+            }
+            return role;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
     }
     
 }
