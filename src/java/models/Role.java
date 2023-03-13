@@ -13,33 +13,37 @@ import java.io.Serializable;
  * @author Mitchell
  */
 public class Role implements Serializable {
-    
-    public static final String PROP_SAMPLE_PROPERTY = "sampleProperty";
-    
-    private String sampleProperty;
-    
-    private PropertyChangeSupport propertySupport;
-    
+    private int roleID;
+    private String roleName;
+
     public Role() {
-        propertySupport = new PropertyChangeSupport(this);
+        roleID = 0;
+        roleName = "";
     }
-    
-    public String getSampleProperty() {
-        return sampleProperty;
+
+    public Role(int roleID, String roleName) {
+        this.roleID = roleID;
+        this.roleName = roleName;
     }
-    
-    public void setSampleProperty(String value) {
-        String oldValue = sampleProperty;
-        sampleProperty = value;
-        propertySupport.firePropertyChange(PROP_SAMPLE_PROPERTY, oldValue, sampleProperty);
+
+    public Role(int roleID) {
+        this.roleID = roleID;
     }
-    
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertySupport.addPropertyChangeListener(listener);
+
+    public int getRoleID() {
+        return roleID;
     }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertySupport.removePropertyChangeListener(listener);
+
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
     
 }
