@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,6 +14,7 @@
     </head>
     <body>
         <h1>Manage Users</h1>
+        <p>${message}</p>
         <table>
             <tr>
                 <th>Username</th>
@@ -20,7 +22,6 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Actions</th>
             </tr>
             <c:forEach items="${users}" var="user">
                 <tr>
@@ -29,15 +30,14 @@
                     <td>${user.lastName}</td>
                     <td>${user.email}</td>
                     <td>${user.role}</td>
-                    <td>
-                        <a href="editUser.jsp?id=${user.id}">Edit</a>
-                        <a href="deleteUser.jsp?id=${user.id}">Delete</a>
-                    </td>
+                    <td><a href="?action=edit?username=${user.username}">Edit</a></td>
+                    <td><a href="?action=delete?username=${user.username}">Delete</a></td>
                 </tr>
             </c:forEach>
 
         </table>
-        <a href="addUser.jsp">Add User</a>
+        <br>
+        <br>
 
     </body>
 </html>

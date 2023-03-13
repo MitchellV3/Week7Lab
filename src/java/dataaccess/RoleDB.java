@@ -30,9 +30,9 @@ public class RoleDB {
             ResultSet rs = ps.executeQuery();
             List<Role> roles = new ArrayList<>();
             while (rs.next()) {
-                Role role = new Role();
-                role.setRoleID(rs.getInt("roleID"));
-                role.setRoleName(rs.getString("roleName"));
+                int roleID = rs.getInt(1);
+                String roleName = rs.getString(2);
+                Role role = new Role(roleID, roleName);
                 roles.add(role);
             }
             return roles;
@@ -57,9 +57,8 @@ public class RoleDB {
             ResultSet rs = ps.executeQuery();
             Role role = null;
             if (rs.next()) {
-                role = new Role();
-                role.setRoleID(rs.getInt("roleID"));
-                role.setRoleName(rs.getString("roleName"));
+                String roleName = rs.getString(2);
+                role = new Role(roleID, roleName);
             }
             return role;
         } catch (SQLException e) {
