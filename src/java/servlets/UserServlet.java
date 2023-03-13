@@ -5,8 +5,14 @@
  */
 package servlets;
 
+import models.Role;
+import models.User;
+import services.RoleService;
+import services.UserService;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -58,6 +64,39 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        UserService us = new UserService();
+        //request.setAttribute("users", us.getAll());
+        RoleService rs = new RoleService();
+        //request.setAttribute("roles", rs.getAll());
+        String action = request.getParameter("action");
+
+        try{
+            if (action != null && action.equals("edit")) {
+                String email = request.getParameter("email");
+                request.setAttribute("user", us.get(email));
+            } else if (action != null && action.equals("delete")) {
+                String email = request.getParameter("email");
+                us.delete(email);
+            }
+
+            List<User> users = us.getAll();
+            request.setAttribute("users", users);
+
+            List<Role> roles = rs.getAll();
+            request.setAttribute("roles", roles);
+
+        } catch (Exception e) {
+            request.setAttribute("message", e.getMessage());
+        }
+
+
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String role = request.getParameter("role");
+
         getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 
