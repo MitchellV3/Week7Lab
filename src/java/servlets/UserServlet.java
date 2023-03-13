@@ -66,9 +66,7 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
 
         UserService us = new UserService();
-        //request.setAttribute("users", us.getAll());
         RoleService rs = new RoleService();
-        //request.setAttribute("roles", rs.getAll());
         String action = request.getParameter("action");
 
         try{
@@ -90,13 +88,6 @@ public class UserServlet extends HttpServlet {
             request.setAttribute("message", e.getMessage());
         }
 
-
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String firstname = request.getParameter("firstname");
-        String lastname = request.getParameter("lastname");
-        String role = request.getParameter("role");
-
         getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 
@@ -111,7 +102,32 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String role = request.getParameter("role");
+        Role replaceRole = new Role(role);
+        String action = request.getParameter("action");
+
+        UserService us = new UserService();
+        RoleService rs = new RoleService();
+
+        try {
+            if (action.equals("add")) {
+                us.insert(email, firstname, lastname, password, replaceRole);
+            } else if (action.equals("edit")) {
+                us.update(email, firstname, lastname, password, replaceRole);
+            }
+
+            List<User> users = us.getAll();
+            request.setAttribute("users", users);
+
+        } catch (Exception e) {
+            request.setAttribute("message", e.getMessage());
+        }
+
+        getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 
     /**
