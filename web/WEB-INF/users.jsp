@@ -14,10 +14,9 @@
     </head>
     <body>
         <h1>Manage Users</h1>
-        <p>${message}</p>
+        <p style="color:red;">${message}</p>
         <table>
             <tr>
-                <th>Username</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
@@ -25,32 +24,87 @@
             </tr>
             <c:forEach items="${users}" var="user">
                 <tr>
-                    <td>${user.username}</td>
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>
                     <td>${user.email}</td>
-                    <td>${user.role}</td>
-                    <td><a href="?action=edit?username=${user.username}">Edit</a></td>
-                    <td><a href="?action=delete?username=${user.username}">Delete</a></td>
+                    <c:choose>
+                        <c:when test="${user.getRole().getRoleID() == 1}">
+                            <td>Admin</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>User</td>
+                        </c:otherwise>
+                    </c:choose>
+                    <td>
+                        <c:url value="/User" var="edit">
+                            <c:param name="email" value="${user.email}"></c:param>
+                            <c:param name="action" value="edit"></c:param>
+                        </c:url>
+                        <a href="${edit}">Edit</a>
+                    </td>
+                    <td>
+                        <c:url value="/User" var="delete">
+                            <c:param name="email" value="${user.email}"></c:param>
+                            <c:param name="action" value="delete"></c:param>
+                        </c:url>
+                        <a href="${delete}">Delete</a>
+                    </td>
                 </tr>
             </c:forEach>
-
         </table>
         <br>
         <br>
-        <h2>Add User</h2>
-    <form action="users" method="post">
-        <label>Username:</label>
-        <input type="text" name="username"><br>
-        <label>First Name:</label>
-        <input type="text" name="firstName"><br>
-        <label>Last Name:</label>
-        <input type="text" name="lastName"><br>
-        <label>Password</label>
-        <input type="text" name="email"><br>
-        <label>Role:</label>
-        <input
-        <input type="submit" value="Add User">
-    </form>
+        <c:if test="${selectUser eq null}">
+            <h2>Add User</h2>
+            <form action="User" method="post">
+                <label>Email:</label>
+                <input type="email" name="email" required><br>
+                <label>First Name:</label>
+                <input type="text" name="firstName" required><br>
+                <label>Last Name:</label>
+                <input type="text" name="lastName" required><br>
+                <label>Password</label>
+                <input type="text" name="password" required><br>
+                <label>Role:</label>
+                <select name="role">
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                </select><br>
+                <input type="hidden" name="action" value="add">
+                <input type="submit" value="Add User">
+            </form>
+        </c:if>
+        <c:if test="${selectUser ne null}">
+            <h2>Edit User</h2>
+            <form action="User" method="post">
+                <input type="hidden" name="email" value="${selectUser.email}">
+                <label>Email: ${selectUser.email}</label>
+                <br>
+                <label>First Name:</label>
+                <input type="text" name="firstName" value="${selectUser.firstName}" required><br>
+                <label>Last Name:</label>
+                <input type="text" name="lastName" value="${selectUser.lastName}" required><br>
+                <label>Password</label>
+                <input type="text" name="password" value="${selectUser.password}" required><br>
+                <label>Role:</label>
+                <select name="role">
+                    <c:choose>
+                        <c:when test="${selectUser.getRole().getRoleID() == 1}">
+                            <option value="1" selected>Admin</option>
+                            <option value="2">User</option>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="1">Admin</option>
+                            <option value="2" selected>User</option>
+                        </c:otherwise>
+                    </c:choose>
+                </select><br>
+                <input type="hidden" name="action" value="edit">
+                <input type="submit" value="Edit User">
+                <br>
+                <br>
+                <a href="User" class="button">Cancel</a>
+            </form>
+        </c:if>
     </body>
 </html>

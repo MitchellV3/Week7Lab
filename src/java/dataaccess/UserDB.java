@@ -30,6 +30,7 @@ public class UserDB {
             ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             List<User> users = new ArrayList<>();
+
             while (rs.next()) {
                 String email = rs.getString(1);
                 String firstName = rs.getString(2);
@@ -39,7 +40,6 @@ public class UserDB {
                 Role role = new Role(roleID);
                 User user = new User(email, firstName, lastName, password, role);
                 users.add(user);
-
             }
             return users;
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class UserDB {
     }
 
     public static User get(String email) {
-ConnectionPool pool = ConnectionPool.getInstance();
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
@@ -80,13 +80,13 @@ ConnectionPool pool = ConnectionPool.getInstance();
         }
     }
 
-    public static void insert(User user) {
+    public static void insert(User user) throws Exception {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-        
+
         try {
-            String query = "INSERT INTO user (email, firstName, lastName, password, roleID) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO user (email, first_name, last_name, password, role) VALUES (?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(query);
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstName());
@@ -96,6 +96,7 @@ ConnectionPool pool = ConnectionPool.getInstance();
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
+            throw new Exception("Error updating user " + user.toString() + " in database");
         } finally {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
@@ -106,7 +107,7 @@ ConnectionPool pool = ConnectionPool.getInstance();
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-        String query = "UPDATE user SET firstName = ?, lastName = ?, password = ?, roleID = ? WHERE email = ?";
+        String query = "UPDATE user SET first_name = ?, last_name = ?, password = ?, role = ? WHERE email = ?";
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, user.getFirstName());
@@ -117,7 +118,7 @@ ConnectionPool pool = ConnectionPool.getInstance();
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
-            throw new Exception("Error updating user");
+            throw new Exception("Error updating user " + user.toString() + " in database: " + user.getRole().getRoleID());
         } finally {
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);

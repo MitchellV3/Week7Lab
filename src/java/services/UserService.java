@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class UserService {
 
-    public static void insert(String email, String firstName, String lastName, String password, Role role) {
+    public static void insert(String email, String firstName, String lastName, String password, Role role) throws Exception {
         User user = new User(email, firstName, lastName, password, role);
         UserDB.insert(user);
     }

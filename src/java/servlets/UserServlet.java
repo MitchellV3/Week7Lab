@@ -72,10 +72,16 @@ public class UserServlet extends HttpServlet {
         try{
             if (action != null && action.equals("edit")) {
                 String email = request.getParameter("email");
-                request.setAttribute("user", us.get(email));
+                User selectUser = us.get(email);
+                request.setAttribute("selectUser", selectUser);
+                request.setAttribute("email", selectUser.getEmail());
             } else if (action != null && action.equals("delete")) {
                 String email = request.getParameter("email");
                 us.delete(email);
+                List<User> users = us.getAll();
+                if (users.isEmpty()) {
+                    request.setAttribute("message", "No users found.");
+                }
             }
 
             List<User> users = us.getAll();
@@ -102,22 +108,19 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        UserService us = new UserService();
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        String firstname = request.getParameter("firstname");
-        String lastname = request.getParameter("lastname");
-        String role = request.getParameter("role");
-        Role replaceRole = new Role(role);
+        String firstname = request.getParameter("firstName");
+        String lastname = request.getParameter("lastName");
+        Role newRole = new Role(request.getParameter("role"));
         String action = request.getParameter("action");
-
-        UserService us = new UserService();
-        RoleService rs = new RoleService();
 
         try {
             if (action.equals("add")) {
-                us.insert(email, firstname, lastname, password, replaceRole);
+                us.insert(email, firstname, lastname, password, newRole);
             } else if (action.equals("edit")) {
-                us.update(email, firstname, lastname, password, replaceRole);
+                us.update(email, firstname, lastname, password, newRole);
             }
 
             List<User> users = us.getAll();

@@ -17,7 +17,7 @@ public class Role implements Serializable {
     private String roleName;
 
     public Role() {
-        roleID = 0;
+        roleID = 2;
         roleName = "";
     }
 
@@ -30,8 +30,8 @@ public class Role implements Serializable {
         this.roleID = roleID;
     }
 
-    public Role(String role) {
-        this.roleName = role;
+    public Role(String roleName) {
+        this.roleName = roleName;
     }
 
     public int getRoleID() {
@@ -48,6 +48,11 @@ public class Role implements Serializable {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public String toString() {
+        return roleName;
     }
     
 }
